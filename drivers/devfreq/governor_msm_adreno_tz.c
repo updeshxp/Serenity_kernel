@@ -37,6 +37,13 @@ static DEFINE_SPINLOCK(tz_lock);
  */
 #define MIN_BUSY		1000
 #define MAX_TZ_VERSION		0
+/*
+* Use BUSY_BIN to check for fully busy rendering
+* intervals that may need early intervention when
+* seen with LONG_FRAME lengths
+*/
+#define BUSY_BIN		95
+#define LONG_FRAME		25000
 
  /*
  * Use BUSY_BIN to check for fully busy rendering
