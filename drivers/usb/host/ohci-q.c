@@ -957,6 +957,14 @@ skip_ed:
 			}
 		}
 
+		/* ED's now officially unlinked, hc doesn't see */
+		if (quirk_zfmicro(ohci) && ed->type == PIPE_INTERRUPT)
+			ohci->eds_scheduled--;
+		ed->hwHeadP &= ~cpu_to_hc32(ohci, ED_H);
+		ed->hwNextED = 0;
+		wmb();
+		ed->hwINFO &= ~cpu_to_hc32(ohci, ED_SKIP | ED_DEQUEUE);
+
 		/* reentrancy:  if we drop the schedule lock, someone might
 		 * have modified this list.  normally it's just prepending
 		 * entries (which we'd ignore), but paranoia won't hurt.
@@ -1033,6 +1041,21 @@ rescan_this:
 		if (!list_empty (&ed->td_list)) {
 			if (ohci->rh_state == OHCI_RH_RUNNING)
 				ed_schedule (ohci, ed);
+		/*
+		 * If no TDs are queued, take ED off the ed_rm_list.
+		 * Otherwise, if the HC is running, reschedule.
+		 * If not, leave it on the list for further dequeues.
+		 */
+		if (list_empty(&ed->td_list)) {
+			*last = ed->ed_next;
+			ed->ed_next = NULL;
+			ed->state = ED_IDLE;
+		} else if (ohci->rh_state == OHCI_RH_RUNNING) {
+			*last = ed->ed_next;
+			ed->ed_next = NULL;
+			ed_schedule(ohci, ed);
+		} else {
+			last = &ed->ed_next;
 		}
 
 		if (modified)
