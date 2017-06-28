@@ -139,7 +139,7 @@ EXPORT_SYMBOL_GPL(vm_memory_committed);
  */
 int __vm_enough_memory(struct mm_struct *mm, long pages, int cap_sys_admin)
 {
-	unsigned long free, allowed, reserve;
+	long free, allowed, reserve;
 
 	vm_acct_memory(pages);
 
@@ -205,7 +205,7 @@ int __vm_enough_memory(struct mm_struct *mm, long pages, int cap_sys_admin)
 	 */
 	if (mm) {
 		reserve = sysctl_user_reserve_kbytes >> (PAGE_SHIFT - 10);
-		allowed -= min(mm->total_vm / 32, reserve);
+		allowed -= min_t(long, mm->total_vm / 32, reserve);
 	}
 
 	if (percpu_counter_read_positive(&vm_committed_as) < allowed)
@@ -1761,6 +1761,7 @@ check_current:
 			return -ENOMEM;
 		if (gap_end >= low_limit &&
            gap_end > gap_start && gap_end - gap_start >= length)
+		    gap_end > gap_start && gap_end - gap_start >= length)
 			goto found;
 
 		/* Visit right subtree if it looks promising */
@@ -1865,6 +1866,7 @@ check_current:
 			return -ENOMEM;
 		if (gap_start <= high_limit &&
            gap_end > gap_start && gap_end - gap_start >= length)
+		    gap_end > gap_start && gap_end - gap_start >= length)
 			goto found;
 
 		/* Visit left subtree if it looks promising */
@@ -2109,6 +2111,7 @@ find_vma_prev(struct mm_struct *mm, unsigned long addr,
  */
 static int acct_stack_growth(struct vm_area_struct *vma,
 			    unsigned long size, unsigned long grow)
+			     unsigned long size, unsigned long grow)
 {
 	struct mm_struct *mm = vma->vm_mm;
 	struct rlimit *rlim = current->signal->rlim;
@@ -2167,10 +2170,35 @@ int expand_upwards(struct vm_area_struct *vma, unsigned long address)
 	if (!(vma->vm_flags & VM_GROWSUP))
 		return -EFAULT;
 
+<<<<<<< HEAD
 	/* Guard against wrapping around to address 0. */
 	address &= PAGE_MASK;
 	address += PAGE_SIZE;
 	if (!address)
+=======
+	/* Guard against exceeding limits of the address space. */
+	address &= PAGE_MASK;
+	if (address >= TASK_SIZE)
+		return -ENOMEM;
+	address += PAGE_SIZE;
+
+	/* Enforce stack_guard_gap */
+	gap_addr = address + stack_guard_gap;
+
+	/* Guard against overflow */
+	if (gap_addr < address || gap_addr > TASK_SIZE)
+		gap_addr = TASK_SIZE;
+
+	next = vma->vm_next;
+	if (next && next->vm_start < gap_addr) {
+		if (!(next->vm_flags & VM_GROWSUP))
+			return -ENOMEM;
+		/* Check that both stack segments have the same anon_vma? */
+	}
+
+	/* We must make sure the anon_vma is allocated. */
+	if (unlikely(anon_vma_prepare(vma)))
+>>>>>>> 0ba4ffc... Merge tag 'v3.10.107' into cm-14.1-caf-8916
 		return -ENOMEM;
 
 	/* Enforce stack_guard_gap */
@@ -2246,6 +2274,7 @@ int expand_downwards(struct vm_area_struct *vma,
 {
 	struct vm_area_struct *prev;
 	unsigned long gap_addr;	
+	unsigned long gap_addr;
 	int error;
 
 	address &= PAGE_MASK;
@@ -2329,6 +2358,21 @@ static int __init cmdline_parse_stack_guard_gap(char *p)
 
 	return 0;
 	}
+__setup("stack_guard_gap=", cmdline_parse_stack_guard_gap);
+
+#ifdef CONFIG_STACK_GROWSUP
+int expand_stack(struct vm_area_struct *vma, unsigned long address)
+{
+{
+	unsigned long val;
+	char *endptr;
+
+	val = simple_strtoul(p, &endptr, 10);
+	if (!*endptr)
+		stack_guard_gap = val << PAGE_SHIFT;
+
+	return 0;
+}
 __setup("stack_guard_gap=", cmdline_parse_stack_guard_gap);
 
 #ifdef CONFIG_STACK_GROWSUP
