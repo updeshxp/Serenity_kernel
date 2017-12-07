@@ -15,13 +15,17 @@ on post-fs-data
 
 # adbd is controlled via property triggers in init.<platform>.usb.rc
 service adbd /sbin/adbd --root_seclabel=u:r:su:s0
-    class core
-    socket adbd stream 660 system system
     disabled
+    socket adbd stream 660 system system
     seclabel u:r:adbd:s0
 
-# adbd on at boot in emulator
-on property:ro.kernel.qemu=1
+# allows adbd at boot with property trigger below
+on property:ro.debuggable=1
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor 04E8
+    write /sys/class/android_usb/android0/idProduct 6860
+    write /sys/class/android_usb/android0/functions adb
+    write /sys/class/android_usb/android0/enable 1
     start adbd
 
 on boot
