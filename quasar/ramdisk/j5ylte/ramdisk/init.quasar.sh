@@ -650,7 +650,7 @@ case "$target" in
 				echo 1 > /proc/sys/vm/laptop_mode
                 echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
 				echo 53059 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
-				echo "14529,19372,24215,53273,72645" > /sys/module/lowmemorykiller/parameters/minfree
+				echo "10611,14148,17685,38907,53055,56592" > /sys/module/lowmemorykiller/parameters/minfree
 				echo 500 > /proc/sys/vm/dirty_expire_centisecs
 				echo 1000 > /proc/sys/vm/dirty_writeback_centisecs
 
