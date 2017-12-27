@@ -727,7 +727,7 @@ service qcom-sh /system/bin/sh /init.qcom.sh
     user root
     oneshot
 
-service qcom-post-boot /system/bin/sh /system/etc/init.qcom.post_boot.sh
+service quasar-postboot /system/bin/sh /init.quasar.sh
     class late_start
     user root
     disabled
@@ -747,7 +747,7 @@ service atfwd /system/bin/ATFWD-daemon
     group system radio
 
 on property:sys.boot_completed=1
-    start qcom-post-boot
+    start quasar-postboot
     start qti-testscripts
 
 on property:persist.radio.atfwd.start=false
