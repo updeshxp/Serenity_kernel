@@ -48,7 +48,7 @@ ProductName=`getprop ro.product.name`
 
 if [ "$ProductName" == "msm8909_512" ] || [ "$ProductName" == "msm8909w" ]; then
       echo "8192,11264,14336,17408,20480,26624" > /sys/module/lowmemorykiller/parameters/minfree
-      echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
+      echo 0 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
       echo 32768 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
 else
     arch_type=`uname -m`
@@ -72,7 +72,7 @@ else
     #echo 1 > /sys/module/process_reclaim/parameters/enable_process_reclaim
     #echo 70 > /sys/module/process_reclaim/parameters/pressure_max
     #echo 30 > /sys/module/process_reclaim/parameters/swap_opt_eff
-    echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
+    echo 0 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
 
     if [ "$arch_type" == "aarch64" ] && [ $MemTotal -gt 1048576 ]; then
     #    echo 10 > /sys/module/process_reclaim/parameters/pressure_min
@@ -648,7 +648,7 @@ case "$target" in
                 echo 20000 > /sys/devices/system/cpu/cpufreq/interactive/sampling_down_factor
                 echo 40 > /sys/class/kgsl/kgsl-3d0/idle_timer
 				echo 1 > /proc/sys/vm/laptop_mode
-                echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
+                echo 0 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
 				echo 53059 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
 				echo "10611,14148,17685,38907,53055,56592" > /sys/module/lowmemorykiller/parameters/minfree
 				echo 500 > /proc/sys/vm/dirty_expire_centisecs
