@@ -1,7 +1,7 @@
 #!/bin/bash
 # Coded by BlackMesa @QuasarKernel v1
 clear
-QS_VERSION=v1
+QS_VERSION=v1.5
 QS_DATE=$(date +%Y%m%d)
 QS_TOOLCHAIN=/home/blackmesa/Scrivania/Android/Sorgenti/Toolchain/UBERTC-arm-eabi-4.8/bin/arm-eabi-
 echo "------------------------------------------"
