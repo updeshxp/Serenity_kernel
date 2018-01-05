@@ -38,6 +38,14 @@ static DEFINE_SPINLOCK(tz_lock);
 #define MIN_BUSY		1000
 #define MAX_TZ_VERSION		0
 
+ /*
+ * Use BUSY_BIN to check for fully busy rendering
+ * intervals that may need early intervention when
+ * seen with LONG_FRAME lengths
+ */
+#define BUSY_BIN		95
+#define LONG_FRAME		25000
+
 /*
  * CEILING is 50msec, larger than any standard
  * frame length, but less than the idle timer.
@@ -408,7 +416,7 @@ static int tz_suspend(struct devfreq *devfreq)
 	priv->bin.total_time = 0;
 	priv->bin.busy_time = 0;
 
-	return 0
+	return 0;
 }
 
 static int tz_handler(struct devfreq *devfreq, unsigned int event, void *data)
