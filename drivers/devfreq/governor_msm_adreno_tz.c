@@ -399,17 +399,16 @@ static int tz_resume(struct devfreq *devfreq)
 static int tz_suspend(struct devfreq *devfreq)
 {
 	struct devfreq_msm_adreno_tz_data *priv = devfreq->data;
-	struct devfreq_dev_profile *profile = devfreq->profile;
-	unsigned long freq;
 	unsigned int scm_data[2] = {0, 0};
+
 	suspended = true;
+
+	__secure_tz_reset_entry2(scm_data, sizeof(scm_data), priv->is_64);
 
 	priv->bin.total_time = 0;
 	priv->bin.busy_time = 0;
 
-	freq = profile->freq_table[profile->max_state - 1];
-
-	return profile->target(devfreq->dev.parent, &freq, 0);
+	return 0
 }
 
 static int tz_handler(struct devfreq *devfreq, unsigned int event, void *data)
