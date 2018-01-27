@@ -17,7 +17,7 @@
 #
 clear
 # Init Fields
-QS_VERSION=v1.6
+QS_VERSION=v1.6-fix
 QS_BUILD=BQK5
 QS_DATE=$(date +%Y%m%d)
 QS_TOOLCHAIN=/home/blackmesa/Scrivania/Android/Sorgenti/Toolchain/arm-eabi-4.9/bin/arm-eabi-
@@ -56,8 +56,10 @@ PACK_COMMON_IMG()
 	echo "----------------------------------------------"
 	echo "Packing boot.img for $QS_VARIANT..."
 	echo " "
-	cp -rf $QS_DIR/quasar/ramdisk/common/ramdisk $QS_DIR/quasar/tools/aik/ramdisk
-	cp -rf $QS_DIR/quasar/ramdisk/common/split_img $QS_DIR/quasar/tools/aik/split_img
+	mkdir -p $QS_DIR/quasar/tools/aik/ramdisk
+	mkdir -p $QS_DIR/quasar/tools/aik/split_img
+	cp -rf $QS_DIR/quasar/ramdisk/common/ramdisk/* $QS_DIR/quasar/tools/aik/ramdisk
+	cp -rf $QS_DIR/quasar/ramdisk/common/split_img/* $QS_DIR/quasar/tools/aik/split_img
 	mv $QS_DIR/output/arch/arm/boot/zImage $QS_DIR/quasar/tools/aik/split_img/boot.img-zImage
 	mv $QS_DIR/quasar/dtb.img $QS_DIR/quasar/tools/aik/split_img/boot.img-dtb
 	$QS_DIR/quasar/tools/aik/repackimg.sh
@@ -69,9 +71,11 @@ PACK_VARIANT_IMG()
 	echo "----------------------------------------------"
 	echo "Packing boot.img for $QS_VARIANT..."
 	echo " "
-	cp -rf $QS_DIR/quasar/ramdisk/common/ramdisk $QS_DIR/quasar/tools/aik/ramdisk
-	cp -rf $QS_DIR/quasar/ramdisk/common/split_img $QS_DIR/quasar/tools/aik/split_img
-	cp -rf $QS_DIR/quasar/ramdisk/$QS_VARIANT/ramdisk $QS_DIR/quasar/tools/aik/ramdisk
+	mkdir -p $QS_DIR/quasar/tools/aik/ramdisk
+	mkdir -p $QS_DIR/quasar/tools/aik/split_img
+	cp -rf $QS_DIR/quasar/ramdisk/common/ramdisk/* $QS_DIR/quasar/tools/aik/ramdisk
+	cp -rf $QS_DIR/quasar/ramdisk/common/split_img/* $QS_DIR/quasar/tools/aik/split_img
+	cp -rf $QS_DIR/quasar/ramdisk/$QS_VARIANT/ramdisk/* $QS_DIR/quasar/tools/aik/ramdisk
 	mv $QS_DIR/output/arch/arm/boot/zImage $QS_DIR/quasar/tools/aik/split_img/boot.img-zImage
 	mv $QS_DIR/quasar/dtb.img $QS_DIR/quasar/tools/aik/split_img/boot.img-dtb
 	$QS_DIR/quasar/tools/aik/repackimg.sh
@@ -88,7 +92,7 @@ PACK_A35_ZIP()
 	mkdir -p $QS_DIR/quasar/work/quasar/a3ulte
 	cp -f $QS_DIR/quasar/tools/flashable/binary $QS_DIR/quasar/work/META-INF/com/google/android/update-binary
 	cp -f $QS_DIR/quasar/tools/flashable/a35 $QS_DIR/quasar/work/META-INF/com/google/android/updater-script
-	sed -i s'/QSVER/v1.6/'g $QS_DIR/quasar/work/META-INF/com/google/android/updater-script
+	sed -i s'/QSVER/v1.6-fix/'g $QS_DIR/quasar/work/META-INF/com/google/android/updater-script
 	cp -f $QS_DIR/quasar/tools/flashable/pronto $QS_DIR/quasar/work/quasar/pronto
 	cp -f $QS_DIR/quasar/tools/flashable/wpsw $QS_DIR/quasar/work/quasar/wpsw
 	mv $QS_DIR/quasar/build/boot-a3ulte-$QS_DATE.img $QS_DIR/quasar/work/quasar/a3ulte/boot.img
@@ -113,7 +117,7 @@ PACK_A55_ZIP()
 	cp -rf $QS_DIR/quasar/tools/aik $QS_DIR/quasar/work/quasar/a5ulte
 	cp -f $QS_DIR/quasar/tools/flashable/binary $QS_DIR/quasar/work/META-INF/com/google/android/update-binary
 	cp -f $QS_DIR/quasar/tools/flashable/a55 $QS_DIR/quasar/work/META-INF/com/google/android/updater-script
-	sed -i s'/QSVER/v1.6/'g $QS_DIR/quasar/work/META-INF/com/google/android/updater-script
+	sed -i s'/QSVER/v1.6-fix/'g $QS_DIR/quasar/work/META-INF/com/google/android/updater-script
 	cp -f $QS_DIR/quasar/tools/flashable/pronto $QS_DIR/quasar/work/quasar/pronto
 	cp -f $QS_DIR/quasar/tools/flashable/wpsw $QS_DIR/quasar/work/quasar/wpsw
 	mv $QS_DIR/quasar/build/boot-a53g-$QS_DATE.img $QS_DIR/quasar/work/quasar/a53g/boot.img
@@ -141,7 +145,7 @@ PACK_J55_ZIP()
 	mkdir -p $QS_DIR/quasar/work/quasar/j5ylte
 	cp -f $QS_DIR/quasar/tools/flashable/binary $QS_DIR/quasar/work/META-INF/com/google/android/update-binary
 	cp -f $QS_DIR/quasar/tools/flashable/j55 $QS_DIR/quasar/work/META-INF/com/google/android/updater-script
-	sed -i s'/QSVER/v1.6/'g $QS_DIR/quasar/work/META-INF/com/google/android/updater-script
+	sed -i s'/QSVER/v1.6-fix/'g $QS_DIR/quasar/work/META-INF/com/google/android/updater-script
 	cp -f $QS_DIR/quasar/tools/flashable/pronto $QS_DIR/quasar/work/quasar/pronto
 	cp -f $QS_DIR/quasar/tools/flashable/wpsw $QS_DIR/quasar/work/quasar/wpsw
 	mv $QS_DIR/quasar/build/boot-j53g-$QS_DATE.img $QS_DIR/quasar/work/quasar/j53g/boot.img
@@ -164,7 +168,7 @@ PACK_J56_ZIP()
 	mkdir -p $QS_DIR/quasar/work/quasar/j5xlte
 	cp -f $QS_DIR/quasar/tools/flashable/binary $QS_DIR/quasar/work/META-INF/com/google/android/update-binary
 	cp -f $QS_DIR/quasar/tools/flashable/j56 $QS_DIR/quasar/work/META-INF/com/google/android/updater-script
-	sed -i s'/QSVER/v1.6/'g $QS_DIR/quasar/work/META-INF/com/google/android/updater-script
+	sed -i s'/QSVER/v1.6-fix/'g $QS_DIR/quasar/work/META-INF/com/google/android/updater-script
 	cp -f $QS_DIR/quasar/tools/flashable/pronto $QS_DIR/quasar/work/quasar/pronto
 	cp -f $QS_DIR/quasar/tools/flashable/wpsw $QS_DIR/quasar/work/quasar/wpsw
 	mv $QS_DIR/quasar/build/boot-j5x3g-$QS_DATE.img $QS_DIR/quasar/work/quasar/j5x3g/boot.img
