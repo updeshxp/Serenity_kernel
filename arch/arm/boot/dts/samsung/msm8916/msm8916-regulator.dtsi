@@ -1,4 +1,4 @@
-/* Copyright (c) 2017, The Linux Foundation. All rights reserved.
+/* Copyright (c) 2013-2015, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -50,7 +50,7 @@
 		regulator-name = "apc_corner";
 		qcom,cpr-fuse-corners = <3>;
 		regulator-min-microvolt = <1>;
-		regulator-max-microvolt = <30>;
+		regulator-max-microvolt = <7>;
 
 		qcom,cpr-voltage-ceiling = <1050000 1150000 1350000>;
 		qcom,cpr-voltage-floor = <1050000 1150000 1350000>;
@@ -71,7 +71,7 @@
 		qcom,cpr-step-quotient = <26>;
 		qcom,cpr-up-threshold = <0>;
 		qcom,cpr-down-threshold = <2>;
-		qcom,cpr-idle-clocks = <30>;
+		qcom,cpr-idle-clocks = <15>;
 		qcom,cpr-gcnt-time = <1>;
 		qcom,vdd-apc-step-up-limit = <1>;
 		qcom,vdd-apc-step-down-limit = <1>;
@@ -87,41 +87,18 @@
 					<27 0 6 0>;
 		qcom,cpr-init-voltage-ref = <1050000 1150000 1350000>;
 		qcom,cpr-init-voltage-step = <10000>;
-		qcom,cpr-corner-map = <1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 3 3 3 3 3 3 3 3 3 3 3>;
+		qcom,cpr-corner-map = <1 1 2 2 3 3 3>;
 		qcom,cpr-corner-frequency-map =
-					<1 50000000>,
-					<2 100000000>,
-					<3 150000000>,
-					<4 200000000>,
-					<5 250000000>,
-					<6 300000000>,
-					<7 350000000>,
-					<8 400000000>,
-					<9 450000000>,
-					<10 500000000>,
-					<11 550000000>,
-					<12 600000000>,
-					<13 650000000>,
-					<14 700000000>,
-					<15 750000000>,
-					<16 800000000>,
-					<17 850000000>,
-					<18 900000000>,
-					<19 950000000>,
-					<20 1000000000>,
-					<21 1050000000>,
-					<22 1100000000>,
-					<23 1150000000>,
-					<24 1200000000>,
-					<25 1250000000>,
-					<26 1300000000>,
-					<27 1350000000>,
-					<28 1400000000>,
-					<29 1450000000>,
-					<30 1500000000>;
+					<1 200000000>,
+					<2 400000000>,
+					<3 533330000>,
+					<4 800000000>,
+					<5 998400000>,
+					<6 1094400000>,
+					<7 1190400000>;
 		qcom,speed-bin-fuse-sel = <1 34 3 0>;
 		qcom,cpr-speed-bin-max-corners =
-					<0 0 2 4 30>;
+					<0 0 2 4 7>;
 		qcom,cpr-quot-adjust-scaling-factor-max = <650>;
 		qcom,cpr-enable;
 	};
