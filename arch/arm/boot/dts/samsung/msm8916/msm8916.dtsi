@@ -421,6 +421,7 @@
 		clock-names = "cpu0_clk", "cpu1_clk",
 				"cpu2_clk", "cpu3_clk";
 		qcom,cpufreq-table =
+			 <  100000 >,
 			 <  200000 >,
 			 <  400000 >,
 			 <  533330 >,
