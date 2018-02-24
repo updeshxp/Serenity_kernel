@@ -167,7 +167,7 @@ PACK_J56_ZIP()
 # Main Menu
 clear
 echo "----------------------------------------------"
-echo "QuasarKernel $S_VERSION Build Script"
+echo "SerenityKernel $S_VERSION Build Script"
 echo "Coded by BlackMesa"
 echo "----------------------------------------------"
 PS3='Please select your option (1-18): '
@@ -200,7 +200,7 @@ do
             echo " "
             echo "----------------------------------------------"
             echo "A3 2015 kernels build finished."
-            echo "Flashable zip is located into quasar/build."
+            echo "Flashable zip is located into serenity/build."
             echo "Press any key for end the script."
             echo "----------------------------------------------"
             read -n1 -r key
@@ -223,7 +223,7 @@ do
             echo " "
             echo "----------------------------------------------"
             echo "a3ulte kernel build finished."
-            echo "boot.img is located into quasar/build."
+            echo "boot.img is located into serenity/build."
             echo "Press any key for end the script."
             echo "----------------------------------------------"
             read -n1 -r key
@@ -335,7 +335,7 @@ do
             echo " "
             echo "----------------------------------------------"
             echo "A5 2015 kernels build finished."
-            echo "Flashable zip is located into quasar/build."
+            echo "Flashable zip is located into serenity/build."
             echo "Press any key for end the script."
             echo "----------------------------------------------"
             read -n1 -r key
@@ -358,7 +358,7 @@ do
             echo " "
             echo "----------------------------------------------"
             echo "a53g kernel build finished."
-            echo "boot.img is located into quasar/build."
+            echo "boot.img is located into serenity/build."
             echo "Press any key for end the script."
             echo "----------------------------------------------"
             read -n1 -r key
@@ -381,7 +381,7 @@ do
             echo " "
             echo "----------------------------------------------"
             echo "a5lte kernel build finished."
-            echo "boot.img is located into quasar/build."
+            echo "boot.img is located into serenity/build."
             echo "Press any key for end the script."
             echo "----------------------------------------------"
             read -n1 -r key
@@ -404,7 +404,7 @@ do
             echo " "
             echo "----------------------------------------------"
             echo "a5ltechn kernel build finished."
-            echo "boot.img is located into quasar/build."
+            echo "boot.img is located into serenity/build."
             echo "Press any key for end the script."
             echo "----------------------------------------------"
             read -n1 -r key
@@ -427,7 +427,7 @@ do
             echo " "
             echo "----------------------------------------------"
             echo "a5ulte kernel build finished."
-            echo "boot.img is located into quasar/build."
+            echo "boot.img is located into serenity/build."
             echo "Press any key for end the script."
             echo "----------------------------------------------"
             read -n1 -r key
@@ -450,7 +450,7 @@ do
             echo " "
             echo "----------------------------------------------"
             echo "a5ulte_can kernel build finished."
-            echo "boot.img is located into quasar/build."
+            echo "boot.img is located into serenity/build."
             echo "Press any key for end the script."
             echo "----------------------------------------------"
             read -n1 -r key
@@ -473,7 +473,7 @@ do
             echo " "
             echo "----------------------------------------------"
             echo "a5ulte_kor kernel build finished."
-            echo "boot.img is located into quasar/build."
+            echo "boot.img is located into serenity/build."
             echo "Press any key for end the script."
             echo "----------------------------------------------"
             read -n1 -r key
@@ -552,7 +552,7 @@ do
             echo " "
             echo "----------------------------------------------"
             echo "J5 2015 kernels build finished."
-            echo "Flashable zip is located into quasar/build."
+            echo "Flashable zip is located into serenity/build."
             echo "Press any key for end the script."
             echo "----------------------------------------------"
             read -n1 -r key
@@ -575,7 +575,7 @@ do
             echo " "
             echo "----------------------------------------------"
             echo "j53g kernel build finished."
-            echo "boot.img is located into quasar/build."
+            echo "boot.img is located into serenity/build."
             echo "Press any key for end the script."
             echo "----------------------------------------------"
             read -n1 -r key
@@ -598,7 +598,7 @@ do
             echo " "
             echo "----------------------------------------------"
             echo "j5lte kernel build finished."
-            echo "boot.img is located into quasar/build."
+            echo "boot.img is located into serenity/build."
             echo "Press any key for end the script."
             echo "----------------------------------------------"
             read -n1 -r key
@@ -621,7 +621,7 @@ do
             echo " "
             echo "----------------------------------------------"
             echo "j5nlte kernel build finished."
-            echo "boot.img is located into quasar/build."
+            echo "boot.img is located into serenity/build."
             echo "Press any key for end the script."
             echo "----------------------------------------------"
             read -n1 -r key
@@ -644,7 +644,7 @@ do
             echo " "
             echo "----------------------------------------------"
             echo "j5ylte kernel build finished."
-            echo "boot.img is located into quasar/build."
+            echo "boot.img is located into serenity/build."
             echo "Press any key for end the script."
             echo "----------------------------------------------"
             read -n1 -r key
@@ -691,7 +691,7 @@ do
             echo " "
             echo "----------------------------------------------"
             echo "J5 2016 kernels build finished."
-            echo "Flashable zip is located into quasar/build."
+            echo "Flashable zip is located into serenity/build."
             echo "Press any key for end the script."
             echo "----------------------------------------------"
             read -n1 -r key
@@ -714,7 +714,7 @@ do
             echo " "
             echo "----------------------------------------------"
             echo "j5x3g kernel build finished."
-            echo "boot.img is located into quasar/build."
+            echo "boot.img is located into serenity/build."
             echo "Press any key for end the script."
             echo "----------------------------------------------"
             read -n1 -r key
@@ -737,7 +737,7 @@ do
             echo " "
             echo "----------------------------------------------"
             echo "j5xlte kernel build finished."
-            echo "boot.img is located into quasar/build."
+            echo "boot.img is located into serenity/build."
             echo "Press any key for end the script."
             echo "----------------------------------------------"
             read -n1 -r key
