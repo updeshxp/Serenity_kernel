@@ -1,189 +1,173 @@
 #!/bin/bash
-#
-# Quasar Kernel Build Script 
-# Coded by BlackMesa @2018
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#      http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
 clear
 # Init Fields
-QS_V_MAJOR=2
-QS_V_MINOR=0
-QS_VERSION=v$QS_V_MAJOR.$QS_V_MINOR
-QS_BUILD=BRA7
-QS_DATE=$(date +%Y%m%d)
-QS_TOOLCHAIN=/home/blackmesa/Scrivania/Android/Sorgenti/Toolchain/arm-eabi-4.9/bin/arm-eabi-
-QS_JOBS=`grep processor /proc/cpuinfo|wc -l`
-QS_DIR=$(pwd)
+S_V_MAJOR=1
+S_V_MINOR=0
+S_VERSION=v$S_V_MAJOR.$S_V_MINOR
+S_BUILD=BRA7
+S_DATE=$(date +%Y%m%d)
+S_TOOLCHAIN=/home/updeshsr/linaro/bin/arm-eabi-
+S_JOBS=`grep processor /proc/cpuinfo|wc -l`
+S_DIR=$(pwd)
 # Init Methods
 CLEAN_SOURCE()
 {
 	make clean
 	make mrproper
-	rm -r -f $QS_DIR/output
+	rm -r -f $S_DIR/output
 }
 BUILD_ZIMAGE()
 {
 	echo "----------------------------------------------"
-	echo "Building zImage for $QS_VARIANT..."
+	echo "Building zImage for $S_VARIANT..."
 	echo " "
 	export ARCH=arm
-	export CROSS_COMPILE=$QS_TOOLCHAIN
-	export LOCALVERSION=-Quasar_Kernel-$QS_VERSION-$QS_VARIANT-$QS_DATE
+	export CROSS_COMPILE=$S_TOOLCHAIN
+	export LOCALVERSION=-Serenity_Kernel-$S_VERSION-$S_VARIANT-$S_DATE
 	mkdir output
-	make -C $QS_DIR -j$QS_JOBS O=output quasar_msm8916_defconfig VARIANT_DEFCONFIG=$QS_DEFCON SELINUX_DEFCONFIG=quasar_selinux_defconfig
-	make -C $QS_DIR -j$QS_JOBS O=output
+	make -C $S_DIR -j$S_JOBS O=output serenity_msm8916_defconfig VARIANT_DEFCONFIG=$S_DEFCON SELINUX_DEFCONFIG=serenity_selinux_defconfig
+	make -C $S_DIR -j$S_JOBS O=output
 	echo " "
 }
 BUILD_DTB()
 {
 	echo "----------------------------------------------"
-	echo "Building dtb for $QS_VARIANT..."
+	echo "Building dtb for $S_VARIANT..."
 	echo " "
-	$QS_DIR/tools/dtbTool -o $QS_DIR/quasar/dtb.img $QS_DIR/output/arch/arm/boot/dts/
+	$S_DIR/tools/dtbTool -o $S_DIR/serenity/dtb.img $S_DIR/output/arch/arm/boot/dts/
 	echo " "
 }
 PACK_COMMON_IMG()
 {
 	echo "----------------------------------------------"
-	echo "Packing boot.img for $QS_VARIANT..."
+	echo "Packing boot.img for $S_VARIANT..."
 	echo " "
-	mkdir -p $QS_DIR/quasar/tools/aik/ramdisk
-	mkdir -p $QS_DIR/quasar/tools/aik/split_img
-	cp -rf $QS_DIR/quasar/ramdisk/common/ramdisk/* $QS_DIR/quasar/tools/aik/ramdisk
-	cp -rf $QS_DIR/quasar/ramdisk/common/split_img/* $QS_DIR/quasar/tools/aik/split_img
-	mv $QS_DIR/output/arch/arm/boot/zImage $QS_DIR/quasar/tools/aik/split_img/boot.img-zImage
-	mv $QS_DIR/quasar/dtb.img $QS_DIR/quasar/tools/aik/split_img/boot.img-dtb
-	$QS_DIR/quasar/tools/aik/repackimg.sh
-	mv $QS_DIR/quasar/tools/aik/image-new.img $QS_DIR/quasar/build/boot-$QS_VARIANT-$QS_DATE.img
-	$QS_DIR/quasar/tools/aik/cleanup.sh
+	mkdir -p $S_DIR/serenity/tools/aik/ramdisk
+	mkdir -p $S_DIR/serenity/tools/aik/split_img
+	cp -rf $S_DIR/serenity/ramdisk/common/ramdisk/* $S_DIR/serenity/tools/aik/ramdisk
+	cp -rf $S_DIR/serenity/ramdisk/common/split_img/* $S_DIR/serenity/tools/aik/split_img
+	mv $S_DIR/output/arch/arm/boot/zImage $S_DIR/serenity/tools/aik/split_img/boot.img-zImage
+	mv $S_DIR/serenity/dtb.img $S_DIR/serenity/tools/aik/split_img/boot.img-dtb
+	$S_DIR/serenity/tools/aik/repackimg.sh
+	mv $S_DIR/serenity/tools/aik/image-new.img $S_DIR/serenity/build/boot-$S_VARIANT-$S_DATE.img
+	$S_DIR/serenity/tools/aik/cleanup.sh
 }
 PACK_VARIANT_IMG()
 {
 	echo "----------------------------------------------"
-	echo "Packing boot.img for $QS_VARIANT..."
+	echo "Packing boot.img for $S_VARIANT..."
 	echo " "
-	mkdir -p $QS_DIR/quasar/tools/aik/ramdisk
-	mkdir -p $QS_DIR/quasar/tools/aik/split_img
-	cp -rf $QS_DIR/quasar/ramdisk/common/ramdisk/* $QS_DIR/quasar/tools/aik/ramdisk
-	cp -rf $QS_DIR/quasar/ramdisk/common/split_img/* $QS_DIR/quasar/tools/aik/split_img
-	cp -rf $QS_DIR/quasar/ramdisk/$QS_VARIANT/ramdisk/* $QS_DIR/quasar/tools/aik/ramdisk
-	mv $QS_DIR/output/arch/arm/boot/zImage $QS_DIR/quasar/tools/aik/split_img/boot.img-zImage
-	mv $QS_DIR/quasar/dtb.img $QS_DIR/quasar/tools/aik/split_img/boot.img-dtb
-	$QS_DIR/quasar/tools/aik/repackimg.sh
-	mv $QS_DIR/quasar/tools/aik/image-new.img $QS_DIR/quasar/build/boot-$QS_VARIANT-$QS_DATE.img
-	$QS_DIR/quasar/tools/aik/cleanup.sh
+	mkdir -p $S_DIR/serenity/tools/aik/ramdisk
+	mkdir -p $S_DIR/serenity/tools/aik/split_img
+	cp -rf $S_DIR/serenity/ramdisk/common/ramdisk/* $S_DIR/serenity/tools/aik/ramdisk
+	cp -rf $S_DIR/serenity/ramdisk/common/split_img/* $S_DIR/serenity/tools/aik/split_img
+	cp -rf $S_DIR/serenity/ramdisk/$S_VARIANT/ramdisk/* $S_DIR/serenity/tools/aik/ramdisk
+	mv $S_DIR/output/arch/arm/boot/zImage $S_DIR/serenity/tools/aik/split_img/boot.img-zImage
+	mv $S_DIR/serenity/dtb.img $S_DIR/serenity/tools/aik/split_img/boot.img-dtb
+	$S_DIR/serenity/tools/aik/repackimg.sh
+	mv $S_DIR/serenity/tools/aik/image-new.img $S_DIR/serenity/build/boot-$S_VARIANT-$S_DATE.img
+	$S_DIR/serenity/tools/aik/cleanup.sh
 }
 PACK_A35_ZIP()
 {
 	echo "----------------------------------------------"
 	echo "Packing flashable zip for A3 2015 kernels..."
 	echo " "
-	mkdir -p $QS_DIR/quasar/work
-	mkdir -p $QS_DIR/quasar/work/META-INF/com/google/android
-	mkdir -p $QS_DIR/quasar/work/quasar/a3ulte
-	cp -f $QS_DIR/quasar/tools/flashable/binary $QS_DIR/quasar/work/META-INF/com/google/android/update-binary
-	cp -f $QS_DIR/quasar/tools/flashable/a35 $QS_DIR/quasar/work/META-INF/com/google/android/updater-script
-	sed -i s'/QSVER/v2.0/'g $QS_DIR/quasar/work/META-INF/com/google/android/updater-script
-	cp -f $QS_DIR/quasar/tools/flashable/pronto $QS_DIR/quasar/work/quasar/pronto
-	cp -f $QS_DIR/quasar/tools/flashable/wpsw $QS_DIR/quasar/work/quasar/wpsw
-	mv $QS_DIR/quasar/build/boot-a3ulte-$QS_DATE.img $QS_DIR/quasar/work/quasar/a3ulte/boot.img
-	cd $QS_DIR/quasar/work
-	$QS_DIR/quasar/tools/flashable/zip -r -9 - * > $QS_DIR/quasar/build/Quasar_Kernel-$QS_VERSION-$QS_BUILD-A35.zip
-	cd $QS_DIR
-	rm -r -f $QS_DIR/quasar/work
+	mkdir -p $S_DIR/serenity/work
+	mkdir -p $S_DIR/serenity/work/META-INF/com/google/android
+	mkdir -p $S_DIR/serenity/work/serenity/a3ulte
+	cp -f $S_DIR/serenity/tools/flashable/binary $S_DIR/serenity/work/META-INF/com/google/android/update-binary
+	cp -f $S_DIR/serenity/tools/flashable/a35 $S_DIR/serenity/work/META-INF/com/google/android/updater-script
+	sed -i s'/QSVER/v2.0/'g $S_DIR/serenity/work/META-INF/com/google/android/updater-script
+	cp -f $S_DIR/serenity/tools/flashable/pronto $S_DIR/serenity/work/serenity/pronto
+	cp -f $S_DIR/serenity/tools/flashable/wpsw $S_DIR/serenity/work/serenity/wpsw
+	mv $S_DIR/serenity/build/boot-a3ulte-$S_DATE.img $S_DIR/serenity/work/serenity/a3ulte/boot.img
+	cd $S_DIR/serenity/work
+	$S_DIR/serenity/tools/flashable/zip -r -9 - * > $S_DIR/serenity/build/Serenity_Kernel-$S_VERSION-$S_BUILD-A35.zip
+	cd $S_DIR
+	rm -r -f $S_DIR/serenity/work
 }
 PACK_A55_ZIP()
 {
 	echo "----------------------------------------------"
 	echo "Packing flashable zip for A5 2015 kernels..."
 	echo " "
-	mkdir -p $QS_DIR/quasar/work
-	mkdir -p $QS_DIR/quasar/work/META-INF/com/google/android
-	mkdir -p $QS_DIR/quasar/work/quasar/a53g
-	mkdir -p $QS_DIR/quasar/work/quasar/a5lte
-	mkdir -p $QS_DIR/quasar/work/quasar/a5ltechn
-	mkdir -p $QS_DIR/quasar/work/quasar/a5ulte
-	mkdir -p $QS_DIR/quasar/work/quasar/a5ulte_can
-	mkdir -p $QS_DIR/quasar/work/quasar/a5ulte_kor
-	cp -rf $QS_DIR/quasar/tools/aik $QS_DIR/quasar/work/quasar/a5ulte
-	cp -f $QS_DIR/quasar/tools/flashable/binary $QS_DIR/quasar/work/META-INF/com/google/android/update-binary
-	cp -f $QS_DIR/quasar/tools/flashable/a55 $QS_DIR/quasar/work/META-INF/com/google/android/updater-script
-	sed -i s'/QSVER/v2.0/'g $QS_DIR/quasar/work/META-INF/com/google/android/updater-script
-	cp -f $QS_DIR/quasar/tools/flashable/pronto $QS_DIR/quasar/work/quasar/pronto
-	cp -f $QS_DIR/quasar/tools/flashable/wpsw $QS_DIR/quasar/work/quasar/wpsw
-	mv $QS_DIR/quasar/build/boot-a53g-$QS_DATE.img $QS_DIR/quasar/work/quasar/a53g/boot.img
-	mv $QS_DIR/quasar/build/boot-a5lte-$QS_DATE.img $QS_DIR/quasar/work/quasar/a5lte/boot.img
-	mv $QS_DIR/quasar/build/boot-a5ltechn-$QS_DATE.img $QS_DIR/quasar/work/quasar/a5ltechn/boot.img
-	mv $QS_DIR/quasar/build/boot-a5ulte-$QS_DATE.img $QS_DIR/quasar/work/quasar/a5ulte/boot.img
-	cp -f $QS_DIR/quasar/tools/flashable/dtb $QS_DIR/quasar/work/quasar/a5ulte/magic.sh
-	mv $QS_DIR/quasar/dtb-can $QS_DIR/quasar/work/quasar/a5ulte_can/boot.img-dtb
-	mv $QS_DIR/quasar/dtb-kor $QS_DIR/quasar/work/quasar/a5ulte_kor/boot.img-dtb
-	cd $QS_DIR/quasar/work
-	$QS_DIR/quasar/tools/flashable/zip -r -9 - * > $QS_DIR/quasar/build/Quasar_Kernel-$QS_VERSION-$QS_BUILD-A55.zip
-	cd $QS_DIR
-	rm -r -f $QS_DIR/quasar/work
+	mkdir -p $S_DIR/serenity/work
+	mkdir -p $S_DIR/serenity/work/META-INF/com/google/android
+	mkdir -p $S_DIR/serenity/work/serenity/a53g
+	mkdir -p $S_DIR/serenity/work/serenity/a5lte
+	mkdir -p $S_DIR/serenity/work/serenity/a5ltechn
+	mkdir -p $S_DIR/serenity/work/serenity/a5ulte
+	mkdir -p $S_DIR/serenity/work/serenity/a5ulte_can
+	mkdir -p $S_DIR/serenity/work/serenity/a5ulte_kor
+	cp -rf $S_DIR/serenity/tools/aik $S_DIR/serenity/work/serenity/a5ulte
+	cp -f $S_DIR/serenity/tools/flashable/binary $S_DIR/serenity/work/META-INF/com/google/android/update-binary
+	cp -f $S_DIR/serenity/tools/flashable/a55 $S_DIR/serenity/work/META-INF/com/google/android/updater-script
+	sed -i s'/QSVER/v2.0/'g $S_DIR/serenity/work/META-INF/com/google/android/updater-script
+	cp -f $S_DIR/serenity/tools/flashable/pronto $S_DIR/serenity/work/serenity/pronto
+	cp -f $S_DIR/serenity/tools/flashable/wpsw $S_DIR/serenity/work/serenity/wpsw
+	mv $S_DIR/serenity/build/boot-a53g-$S_DATE.img $S_DIR/serenity/work/serenity/a53g/boot.img
+	mv $S_DIR/serenity/build/boot-a5lte-$S_DATE.img $S_DIR/serenity/work/serenity/a5lte/boot.img
+	mv $S_DIR/serenity/build/boot-a5ltechn-$S_DATE.img $S_DIR/serenity/work/serenity/a5ltechn/boot.img
+	mv $S_DIR/serenity/build/boot-a5ulte-$S_DATE.img $S_DIR/serenity/work/serenity/a5ulte/boot.img
+	cp -f $S_DIR/serenity/tools/flashable/dtb $S_DIR/serenity/work/serenity/a5ulte/magic.sh
+	mv $S_DIR/serenity/dtb-can $S_DIR/serenity/work/serenity/a5ulte_can/boot.img-dtb
+	mv $S_DIR/serenity/dtb-kor $S_DIR/serenity/work/serenity/a5ulte_kor/boot.img-dtb
+	cd $S_DIR/serenity/work
+	$S_DIR/serenity/tools/flashable/zip -r -9 - * > $S_DIR/serenity/build/Serenity_Kernel-$S_VERSION-$S_BUILD-A55.zip
+	cd $S_DIR
+	rm -r -f $S_DIR/serenity/work
 }
 PACK_J55_ZIP()
 {
 	echo "----------------------------------------------"
 	echo "Packing flashable zip for J5 2015 kernels..."
 	echo " "
-	mkdir -p $QS_DIR/quasar/work
-	mkdir -p $QS_DIR/quasar/work/META-INF/com/google/android
-	mkdir -p $QS_DIR/quasar/work/quasar/j53g
-	mkdir -p $QS_DIR/quasar/work/quasar/j5lte
-	mkdir -p $QS_DIR/quasar/work/quasar/j5nlte
-	mkdir -p $QS_DIR/quasar/work/quasar/j5ylte
-	cp -f $QS_DIR/quasar/tools/flashable/binary $QS_DIR/quasar/work/META-INF/com/google/android/update-binary
-	cp -f $QS_DIR/quasar/tools/flashable/j55 $QS_DIR/quasar/work/META-INF/com/google/android/updater-script
-	sed -i s'/QSVER/v2.0/'g $QS_DIR/quasar/work/META-INF/com/google/android/updater-script
-	cp -f $QS_DIR/quasar/tools/flashable/pronto $QS_DIR/quasar/work/quasar/pronto
-	cp -f $QS_DIR/quasar/tools/flashable/wpsw $QS_DIR/quasar/work/quasar/wpsw
-	mv $QS_DIR/quasar/build/boot-j53g-$QS_DATE.img $QS_DIR/quasar/work/quasar/j53g/boot.img
-	mv $QS_DIR/quasar/build/boot-j5lte-$QS_DATE.img $QS_DIR/quasar/work/quasar/j5lte/boot.img
-	mv $QS_DIR/quasar/build/boot-j5nlte-$QS_DATE.img $QS_DIR/quasar/work/quasar/j5nlte/boot.img
-	mv $QS_DIR/quasar/build/boot-j5ylte-$QS_DATE.img $QS_DIR/quasar/work/quasar/j5ylte/boot.img
-	cd $QS_DIR/quasar/work
-	$QS_DIR/quasar/tools/flashable/zip -r -9 - * > $QS_DIR/quasar/build/Quasar_Kernel-$QS_VERSION-$QS_BUILD-J55.zip
-	cd $QS_DIR
-	rm -r -f $QS_DIR/quasar/work
+	mkdir -p $S_DIR/serenity/work
+	mkdir -p $S_DIR/serenity/work/META-INF/com/google/android
+	mkdir -p $S_DIR/serenity/work/serenity/j53g
+	mkdir -p $S_DIR/serenity/work/serenity/j5lte
+	mkdir -p $S_DIR/serenity/work/serenity/j5nlte
+	mkdir -p $S_DIR/serenity/work/serenity/j5ylte
+	cp -f $S_DIR/serenity/tools/flashable/binary $S_DIR/serenity/work/META-INF/com/google/android/update-binary
+	cp -f $S_DIR/serenity/tools/flashable/j55 $S_DIR/serenity/work/META-INF/com/google/android/updater-script
+	sed -i s'/QSVER/v2.0/'g $S_DIR/serenity/work/META-INF/com/google/android/updater-script
+	cp -f $S_DIR/serenity/tools/flashable/pronto $S_DIR/serenity/work/serenity/pronto
+	cp -f $S_DIR/serenity/tools/flashable/wpsw $S_DIR/serenity/work/serenity/wpsw
+	mv $S_DIR/serenity/build/boot-j53g-$S_DATE.img $S_DIR/serenity/work/serenity/j53g/boot.img
+	mv $S_DIR/serenity/build/boot-j5lte-$S_DATE.img $S_DIR/serenity/work/serenity/j5lte/boot.img
+	mv $S_DIR/serenity/build/boot-j5nlte-$S_DATE.img $S_DIR/serenity/work/serenity/j5nlte/boot.img
+	mv $S_DIR/serenity/build/boot-j5ylte-$S_DATE.img $S_DIR/serenity/work/serenity/j5ylte/boot.img
+	cd $S_DIR/serenity/work
+	$S_DIR/serenity/tools/flashable/zip -r -9 - * > $S_DIR/serenity/build/Serenity_Kernel-$S_VERSION-$S_BUILD-J55.zip
+	cd $S_DIR
+	rm -r -f $S_DIR/serenity/work
 }
 PACK_J56_ZIP()
 {
 	echo "----------------------------------------------"
 	echo "Packing flashable zip for J5 2016 kernels..."
 	echo " "
-	mkdir -p $QS_DIR/quasar/work
-	mkdir -p $QS_DIR/quasar/work/META-INF/com/google/android
-	mkdir -p $QS_DIR/quasar/work/quasar/j5x3g
-	mkdir -p $QS_DIR/quasar/work/quasar/j5xlte
-	cp -f $QS_DIR/quasar/tools/flashable/binary $QS_DIR/quasar/work/META-INF/com/google/android/update-binary
-	cp -f $QS_DIR/quasar/tools/flashable/j56 $QS_DIR/quasar/work/META-INF/com/google/android/updater-script
-	sed -i s'/QSVER/v2.0/'g $QS_DIR/quasar/work/META-INF/com/google/android/updater-script
-	cp -f $QS_DIR/quasar/tools/flashable/pronto $QS_DIR/quasar/work/quasar/pronto
-	cp -f $QS_DIR/quasar/tools/flashable/wpsw $QS_DIR/quasar/work/quasar/wpsw
-	mv $QS_DIR/quasar/build/boot-j5x3g-$QS_DATE.img $QS_DIR/quasar/work/quasar/j5x3g/boot.img
-	mv $QS_DIR/quasar/build/boot-j5xlte-$QS_DATE.img $QS_DIR/quasar/work/quasar/j5xlte/boot.img
-	cd $QS_DIR/quasar/work
-	$QS_DIR/quasar/tools/flashable/zip -r -9 - * > $QS_DIR/quasar/build/Quasar_Kernel-$QS_VERSION-$QS_BUILD-J56.zip
-	cd $QS_DIR
-	rm -r -f $QS_DIR/quasar/work
+	mkdir -p $S_DIR/serenity/work
+	mkdir -p $S_DIR/serenity/work/META-INF/com/google/android
+	mkdir -p $S_DIR/serenity/work/serenity/j5x3g
+	mkdir -p $S_DIR/serenity/work/serenity/j5xlte
+	cp -f $S_DIR/serenity/tools/flashable/binary $S_DIR/serenity/work/META-INF/com/google/android/update-binary
+	cp -f $S_DIR/serenity/tools/flashable/j56 $S_DIR/serenity/work/META-INF/com/google/android/updater-script
+	sed -i s'/QSVER/v2.0/'g $S_DIR/serenity/work/META-INF/com/google/android/updater-script
+	cp -f $S_DIR/serenity/tools/flashable/pronto $S_DIR/serenity/work/serenity/pronto
+	cp -f $S_DIR/serenity/tools/flashable/wpsw $S_DIR/serenity/work/serenity/wpsw
+	mv $S_DIR/serenity/build/boot-j5x3g-$S_DATE.img $S_DIR/serenity/work/serenity/j5x3g/boot.img
+	mv $S_DIR/serenity/build/boot-j5xlte-$S_DATE.img $S_DIR/serenity/work/serenity/j5xlte/boot.img
+	cd $S_DIR/serenity/work
+	$S_DIR/serenity/tools/flashable/zip -r -9 - * > $S_DIR/serenity/build/Serenity_Kernel-$S_VERSION-$S_BUILD-J56.zip
+	cd $S_DIR
+	rm -r -f $S_DIR/serenity/work
 }
 # Main Menu
 clear
 echo "----------------------------------------------"
-echo "QuasarKernel $QS_VERSION Build Script"
+echo "QuasarKernel $S_VERSION Build Script"
 echo "Coded by BlackMesa"
 echo "----------------------------------------------"
 PS3='Please select your option (1-18): '
@@ -204,8 +188,8 @@ do
             echo " "
             echo "----------------------------------------------"
             echo "Starting a3ulte kernel build..."
-            QS_VARIANT=a3ulte
-            QS_DEFCON=quasar_msm8916_a3ulte_defconfig
+            S_VARIANT=a3ulte
+            S_DEFCON=serenity_msm8916_a3ulte_defconfig
             BUILD_ZIMAGE
             BUILD_DTB
             PACK_VARIANT_IMG
@@ -231,8 +215,8 @@ do
             echo " "
             echo "----------------------------------------------"
             echo "Starting a3ulte kernel build..."
-            QS_VARIANT=a3ulte
-            QS_DEFCON=quasar_msm8916_a3ulte_defconfig
+            S_VARIANT=a3ulte
+            S_DEFCON=serenity_msm8916_a3ulte_defconfig
             BUILD_ZIMAGE
             BUILD_DTB
             PACK_VARIANT_IMG
@@ -258,8 +242,8 @@ do
             echo " "
             echo "----------------------------------------------"
             echo "Starting a53g kernel build..."
-            QS_VARIANT=a53g
-            QS_DEFCON=quasar_msm8916_a53g_defconfig
+            S_VARIANT=a53g
+            S_DEFCON=serenity_msm8916_a53g_defconfig
             BUILD_ZIMAGE
             BUILD_DTB
             PACK_VARIANT_IMG
@@ -274,8 +258,8 @@ do
             echo " "
             echo "----------------------------------------------"
             echo "Starting a5lte kernel build..."
-            QS_VARIANT=a5lte
-            QS_DEFCON=quasar_msm8916_a5lte_defconfig
+            S_VARIANT=a5lte
+            S_DEFCON=serenity_msm8916_a5lte_defconfig
             BUILD_ZIMAGE
             BUILD_DTB
             PACK_VARIANT_IMG
@@ -290,8 +274,8 @@ do
             echo " "
             echo "----------------------------------------------"
             echo "Starting a5ltechn kernel build..."
-            QS_VARIANT=a5ltechn
-            QS_DEFCON=quasar_msm8916_a5ltechn_defconfig
+            S_VARIANT=a5ltechn
+            S_DEFCON=serenity_msm8916_a5ltechn_defconfig
             BUILD_ZIMAGE
             BUILD_DTB
             PACK_VARIANT_IMG
@@ -306,8 +290,8 @@ do
             echo " "
             echo "----------------------------------------------"
             echo "Starting a5ulte kernel build..."
-            QS_VARIANT=a5ulte
-            QS_DEFCON=quasar_msm8916_a5ulte_defconfig
+            S_VARIANT=a5ulte
+            S_DEFCON=serenity_msm8916_a5ulte_defconfig
             BUILD_ZIMAGE
             BUILD_DTB
             PACK_VARIANT_IMG
@@ -323,11 +307,11 @@ do
             echo " "
             echo "----------------------------------------------"
             echo "Starting a5ulte_can kernel build..."
-            QS_VARIANT=a5ulte_can
-            QS_DEFCON=quasar_msm8916_a5ulte_can_defconfig
+            S_VARIANT=a5ulte_can
+            S_DEFCON=serenity_msm8916_a5ulte_can_defconfig
             BUILD_ZIMAGE
             BUILD_DTB
-            mv $QS_DIR/quasar/dtb.img $QS_DIR/quasar/dtb-can
+            mv $S_DIR/serenity/dtb.img $S_DIR/serenity/dtb-can
             echo " "
             echo "----------------------------------------------"
             echo "a5ulte_can kernel build finished."
@@ -339,11 +323,11 @@ do
             echo " "
             echo "----------------------------------------------"
             echo "Starting a5ulte_kor kernel build..."
-            QS_VARIANT=a5ulte_kor
-            QS_DEFCON=quasar_msm8916_a5ulte_kor_defconfig
+            S_VARIANT=a5ulte_kor
+            S_DEFCON=serenity_msm8916_a5ulte_kor_defconfig
             BUILD_ZIMAGE
             BUILD_DTB
-            mv $QS_DIR/quasar/dtb.img $QS_DIR/quasar/dtb-kor
+            mv $S_DIR/serenity/dtb.img $S_DIR/serenity/dtb-kor
             echo " "
             echo "----------------------------------------------"
             echo "a5ulte_kor kernel build finished."
@@ -366,8 +350,8 @@ do
             echo " "
             echo "----------------------------------------------"
             echo "Starting a53g kernel build..."
-            QS_VARIANT=a53g
-            QS_DEFCON=quasar_msm8916_a53g_defconfig
+            S_VARIANT=a53g
+            S_DEFCON=serenity_msm8916_a53g_defconfig
             BUILD_ZIMAGE
             BUILD_DTB
             PACK_VARIANT_IMG
@@ -389,8 +373,8 @@ do
             echo " "
             echo "----------------------------------------------"
             echo "Starting a5lte kernel build..."
-            QS_VARIANT=a5lte
-            QS_DEFCON=quasar_msm8916_a5lte_defconfig
+            S_VARIANT=a5lte
+            S_DEFCON=serenity_msm8916_a5lte_defconfig
             BUILD_ZIMAGE
             BUILD_DTB
             PACK_VARIANT_IMG
@@ -412,8 +396,8 @@ do
             echo " "
             echo "----------------------------------------------"
             echo "Starting a5ltechn kernel build..."
-            QS_VARIANT=a5ltechn
-            QS_DEFCON=quasar_msm8916_a5ltechn_defconfig
+            S_VARIANT=a5ltechn
+            S_DEFCON=serenity_msm8916_a5ltechn_defconfig
             BUILD_ZIMAGE
             BUILD_DTB
             PACK_VARIANT_IMG
@@ -435,8 +419,8 @@ do
             echo " "
             echo "----------------------------------------------"
             echo "Starting a5ulte kernel build..."
-            QS_VARIANT=a5ulte
-            QS_DEFCON=quasar_msm8916_a5ulte_defconfig
+            S_VARIANT=a5ulte
+            S_DEFCON=serenity_msm8916_a5ulte_defconfig
             BUILD_ZIMAGE
             BUILD_DTB
             PACK_VARIANT_IMG
@@ -458,8 +442,8 @@ do
             echo " "
             echo "----------------------------------------------"
             echo "Starting a5ulte_can kernel build..."
-            QS_VARIANT=a5ulte_can
-            QS_DEFCON=quasar_msm8916_a5ulte_can_defconfig
+            S_VARIANT=a5ulte_can
+            S_DEFCON=serenity_msm8916_a5ulte_can_defconfig
             BUILD_ZIMAGE
             BUILD_DTB
             PACK_VARIANT_IMG
@@ -481,8 +465,8 @@ do
             echo " "
             echo "----------------------------------------------"
             echo "Starting a5ulte_kor kernel build..."
-            QS_VARIANT=a5ulte_kor
-            QS_DEFCON=quasar_msm8916_a5ulte_kor_defconfig
+            S_VARIANT=a5ulte_kor
+            S_DEFCON=serenity_msm8916_a5ulte_kor_defconfig
             BUILD_ZIMAGE
             BUILD_DTB
             PACK_VARIANT_IMG
@@ -508,8 +492,8 @@ do
             echo " "
             echo "----------------------------------------------"
             echo "Starting j53g kernel build..."
-            QS_VARIANT=j53g
-            QS_DEFCON=quasar_msm8916_j53g_defconfig
+            S_VARIANT=j53g
+            S_DEFCON=serenity_msm8916_j53g_defconfig
             BUILD_ZIMAGE
             BUILD_DTB
             PACK_VARIANT_IMG
@@ -524,8 +508,8 @@ do
             echo " "
             echo "----------------------------------------------"
             echo "Starting j5lte kernel build..."
-            QS_VARIANT=j5lte
-            QS_DEFCON=quasar_msm8916_j5lte_defconfig
+            S_VARIANT=j5lte
+            S_DEFCON=serenity_msm8916_j5lte_defconfig
             BUILD_ZIMAGE
             BUILD_DTB
             PACK_VARIANT_IMG
@@ -540,8 +524,8 @@ do
             echo " "
             echo "----------------------------------------------"
             echo "Starting j5nlte kernel build..."
-            QS_VARIANT=j5nlte
-            QS_DEFCON=quasar_msm8916_j5nlte_defconfig
+            S_VARIANT=j5nlte
+            S_DEFCON=serenity_msm8916_j5nlte_defconfig
             BUILD_ZIMAGE
             BUILD_DTB
             PACK_VARIANT_IMG
@@ -556,8 +540,8 @@ do
             echo " "
             echo "----------------------------------------------"
             echo "Starting j5ylte kernel build..."
-            QS_VARIANT=j5ylte
-            QS_DEFCON=quasar_msm8916_j5ylte_defconfig
+            S_VARIANT=j5ylte
+            S_DEFCON=serenity_msm8916_j5ylte_defconfig
             BUILD_ZIMAGE
             BUILD_DTB
             PACK_VARIANT_IMG
@@ -583,8 +567,8 @@ do
             echo " "
             echo "----------------------------------------------"
             echo "Starting j53g kernel build..."
-            QS_VARIANT=j53g
-            QS_DEFCON=quasar_msm8916_j53g_defconfig
+            S_VARIANT=j53g
+            S_DEFCON=serenity_msm8916_j53g_defconfig
             BUILD_ZIMAGE
             BUILD_DTB
             PACK_VARIANT_IMG
@@ -606,8 +590,8 @@ do
             echo " "
             echo "----------------------------------------------"
             echo "Starting j5lte kernel build..."
-            QS_VARIANT=j5lte
-            QS_DEFCON=quasar_msm8916_j5lte_defconfig
+            S_VARIANT=j5lte
+            S_DEFCON=serenity_msm8916_j5lte_defconfig
             BUILD_ZIMAGE
             BUILD_DTB
             PACK_COMMON_IMG
@@ -629,8 +613,8 @@ do
             echo " "
             echo "----------------------------------------------"
             echo "Starting j5nlte kernel build..."
-            QS_VARIANT=j5nlte
-            QS_DEFCON=quasar_msm8916_j5nlte_defconfig
+            S_VARIANT=j5nlte
+            S_DEFCON=serenity_msm8916_j5nlte_defconfig
             BUILD_ZIMAGE
             BUILD_DTB
             PACK_VARIANT_IMG
@@ -652,8 +636,8 @@ do
             echo " "
             echo "----------------------------------------------"
             echo "Starting j5ylte kernel build..."
-            QS_VARIANT=j5ylte
-            QS_DEFCON=quasar_msm8916_j5ylte_defconfig
+            S_VARIANT=j5ylte
+            S_DEFCON=serenity_msm8916_j5ylte_defconfig
             BUILD_ZIMAGE
             BUILD_DTB
             PACK_VARIANT_IMG
@@ -679,8 +663,8 @@ do
             echo " "
             echo "----------------------------------------------"
             echo "Starting j5x3g kernel build..."
-            QS_VARIANT=j5x3g
-            QS_DEFCON=quasar_msm8916_j5x3g_defconfig
+            S_VARIANT=j5x3g
+            S_DEFCON=serenity_msm8916_j5x3g_defconfig
             BUILD_ZIMAGE
             BUILD_DTB
             PACK_VARIANT_IMG
@@ -695,8 +679,8 @@ do
             echo " "
             echo "----------------------------------------------"
             echo "Starting j5xlte kernel build..."
-            QS_VARIANT=j5xlte
-            QS_DEFCON=quasar_msm8916_j5xlte_defconfig
+            S_VARIANT=j5xlte
+            S_DEFCON=serenity_msm8916_j5xlte_defconfig
             BUILD_ZIMAGE
             BUILD_DTB
             PACK_VARIANT_IMG
@@ -722,8 +706,8 @@ do
             echo " "
             echo "----------------------------------------------"
             echo "Starting j5x3g kernel build..."
-            QS_VARIANT=j5x3g
-            QS_DEFCON=quasar_msm8916_j5x3g_defconfig
+            S_VARIANT=j5x3g
+            S_DEFCON=serenity_msm8916_j5x3g_defconfig
             BUILD_ZIMAGE
             BUILD_DTB
             PACK_VARIANT_IMG
@@ -745,8 +729,8 @@ do
             echo " "
             echo "----------------------------------------------"
             echo "Starting j5xlte kernel build..."
-            QS_VARIANT=j5xlte
-            QS_DEFCON=quasar_msm8916_j5xlte_defconfig
+            S_VARIANT=j5xlte
+            S_DEFCON=serenity_msm8916_j5xlte_defconfig
             BUILD_ZIMAGE
             BUILD_DTB
             PACK_VARIANT_IMG
