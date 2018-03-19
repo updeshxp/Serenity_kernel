@@ -379,7 +379,7 @@ static struct pll_clk a53sspll = {
 		.vdd_class = &vdd_sr2_pll,
 		.fmax = (unsigned long [VDD_SR2_PLL_NUM]) {
 			[VDD_SR2_PLL_SVS] = 1000000000,
-			[VDD_SR2_PLL_NOM] = 1900000000,
+			[VDD_SR2_PLL_NOM] = 2000000000,
 		},
 		.num_fmax = VDD_SR2_PLL_NUM,
 		CLK_INIT(a53sspll.c),
@@ -465,7 +465,7 @@ static struct pll_vote_clk gpll2_clk_src = {
 	.base = &virt_bases[GCC_BASE],
 	.c = {
 		.parent = &xo_clk_src.c,
-		.rate = 930000000,
+		.rate = 990000000,
 		.dbg_name = "gpll2_clk_src",
 		.ops = &clk_ops_pll_vote,
 		CLK_INIT(gpll2_clk_src.c),

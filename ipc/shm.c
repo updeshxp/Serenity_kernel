@@ -1043,7 +1043,6 @@ out_unlock1:
  */
 long do_shmat(int shmid, char __user *shmaddr, int shmflg,
 		ulong *raddr, unsigned long shmlba)
-	      ulong *raddr, unsigned long shmlba)
 {
 	struct shmid_kernel *shp;
 	unsigned long addr;
