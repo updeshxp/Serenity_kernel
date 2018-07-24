@@ -1,0 +1,42 @@
+# Coded by BlackMesa @QuasarKernel/A35
+assert(is_substring("A300FU", getprop("ro.boot.bootloader")) ||
+  abort("The following kernel isn't compatible with your device. Aborting..."););
+#
+set_progress(0.0);
+#
+ui_print("======================================");
+ui_print("Quasar Kernel QSVER");
+ui_print("by BlackMesa @XDA developers");
+ui_print("======================================");
+#
+ui_print("-Mounting Partitions...");
+ifelse(is_mounted("/system"), unmount("/system"));
+ifelse(is_mounted("/cache"), unmount("/cache"));
+mount("ext4", "EMMC", "/dev/block/bootdevice/by-name/system", "/system");
+mount("ext4", "EMMC", "/dev/block/bootdevice/by-name/cache", "/cache");
+#
+ui_print("-Wiping Cache...");
+delete_recursive("/cache");
+#
+set_progress(0.15);
+#
+ui_print("-Flashing a3ulte Kernel...");
+package_extract_file("quasar/a3ulte/boot.img", "/dev/block/bootdevice/by-name/boot");
+set_progress(0.50);
+#
+ui_print("-Flashing Pronto Wlan Drivers...");
+package_extract_file("quasar/pronto", "/system/lib/modules/pronto/pronto_wlan.ko");
+package_extract_file("quasar/wpsw", "/system/vendor/lib/libsecure_storage.so");
+#
+set_progress(0.80);
+#
+ui_print("-Unmounting Partitions...");
+ifelse(is_mounted("/system"), unmount("/system"));
+ifelse(is_mounted("/cache"), unmount("/cache"));
+#
+set_progress(1.000000);
+#
+#
+ui_print("======================================");
+ui_print("Done! Enjoy :D");
+ui_print("======================================");

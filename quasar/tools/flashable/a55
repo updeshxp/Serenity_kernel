@@ -1,0 +1,77 @@
+# Coded by BlackMesa @QuasarKernel/A55
+assert(is_substring("A500", getprop("ro.boot.bootloader")) ||
+  abort("The following kernel isn't compatible with your device. Aborting..."););
+#
+set_progress(0.0);
+#
+ui_print("======================================");
+ui_print("Quasar Kernel QSVER");
+ui_print("by BlackMesa @XDA developers");
+ui_print("======================================");
+#
+ui_print("-Mounting Partitions...");
+ifelse(is_mounted("/system"), unmount("/system"));
+ifelse(is_mounted("/cache"), unmount("/cache"));
+mount("ext4", "EMMC", "/dev/block/bootdevice/by-name/system", "/system");
+mount("ext4", "EMMC", "/dev/block/bootdevice/by-name/cache", "/cache");
+#
+ui_print("-Wiping Cache...");
+delete_recursive("/cache");
+#
+set_progress(0.15);
+#
+if is_substring("A500F", getprop("ro.boot.bootloader")) || is_substring("A500G", getprop("ro.boot.bootloader")) || is_substring("A500M", getprop("ro.boot.bootloader")) || is_substring("A500YZ", getprop("ro.boot.bootloader")) then
+	ui_print("-Flashing a5lte Kernel...");
+	package_extract_file("quasar/a5lte/boot.img", "/dev/block/bootdevice/by-name/boot");
+endif;
+#
+if is_substring("A5000", getprop("ro.boot.bootloader")) || is_substring("A5009", getprop("ro.boot.bootloader")) then
+	ui_print("-Flashing a5ltechn Kernel...");
+	package_extract_file("quasar/a5ltechn/boot.img", "/dev/block/bootdevice/by-name/boot");
+endif;
+#
+if is_substring("A500H", getprop("ro.boot.bootloader")) then
+	ui_print("-Flashing a53g Kernel...");
+	package_extract_file("quasar/a53g/boot.img", "/dev/block/bootdevice/by-name/boot");
+endif;
+#
+if is_substring("A500FU", getprop("ro.boot.bootloader")) || is_substring("A500YD", getprop("ro.boot.bootloader")) then
+	ui_print("-Flashing a5ulte Kernel...");
+	package_extract_file("quasar/a5ulte/boot.img", "/dev/block/bootdevice/by-name/boot");
+endif;
+#
+if is_substring("A500K", getprop("ro.boot.bootloader")) || is_substring("A500L", getprop("ro.boot.bootloader")) || is_substring("A500S", getprop("ro.boot.bootloader")) || is_substring("A500W", getprop("ro.boot.bootloader")) then
+	package_extract_dir("quasar/a5ulte", "/tmp");
+	if is_substring("A500W", getprop("ro.boot.bootloader")) then
+		ui_print("-Flashing a5ulte_can Kernel...");
+		package_extract_file("quasar/a5ulte_can/boot.img-dtb", "/tmp/aik/boot.img-dtb");
+	endif;
+	if is_substring("A500K", getprop("ro.boot.bootloader")) || is_substring("A500L", getprop("ro.boot.bootloader")) || is_substring("A500S", getprop("ro.boot.bootloader")) then
+		ui_print("-Flashing a5ulte_kor Kernel...");
+		package_extract_file("quasar/a5ulte_kor/boot.img-dtb", "/tmp/aik/boot.img-dtb");
+	endif;
+	run_program("/tmp/magic.sh");
+	package_extract_file("/tmp/boot.img", "/dev/block/bootdevice/by-name/boot");
+	delete_recursive("/tmp/aik");
+	delete("/tmp/boot.img");
+	delete("/tmp/magic.sh");
+endif;
+#
+set_progress(0.50);
+#
+ui_print("-Flashing Pronto Wlan Drivers...");
+package_extract_file("quasar/pronto", "/system/lib/modules/pronto/pronto_wlan.ko");
+package_extract_file("quasar/wpsw", "/system/vendor/lib/libsecure_storage.so");
+#
+set_progress(0.80);
+#
+ui_print("-Unmounting Partitions...");
+ifelse(is_mounted("/system"), unmount("/system"));
+ifelse(is_mounted("/cache"), unmount("/cache"));
+#
+set_progress(1.000000);
+#
+#
+ui_print("======================================");
+ui_print("Done! Enjoy :D");
+ui_print("======================================");
