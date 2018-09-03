@@ -13,7 +13,7 @@ import /init.trace.rc
 import /init.carrier.rc
 import /init.rilcommon.rc
 import /init.container.rc
-import /init.quasar.rc
+import /init.serenity.rc
 
 on early-init
     # Set init and its forked children's oom_adj.
