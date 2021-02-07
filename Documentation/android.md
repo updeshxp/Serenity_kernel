@@ -1,6 +1,6 @@
-				=============
-				A N D R O I D
-				=============
+
+#	A N D R O I D
+
 
 Copyright (C) 2009 Google, Inc.
 Written by Mike Chan <mike@android.com>
@@ -16,7 +16,8 @@ CONTENTS:
 
 
 1. Android
-==========
+
+-------------
 
 Android (www.android.com) is an open source operating system for mobile devices.
 This document describes configurations needed to run the Android framework on
@@ -33,7 +34,7 @@ After building a standard defconfig, ensure that these options are enabled in
 your .config or defconfig if they are not already. Based off the msm_defconfig.
 You should keep the rest of the default options enabled in the defconfig
 unless you know what you are doing.
-
+```
 ANDROID_PARANOID_NETWORK
 ASHMEM
 CONFIG_FB_MODE_HELPERS
@@ -81,16 +82,18 @@ YAFFS_AUTO_YAFFS2
 YAFFS_FS
 YAFFS_YAFFS1
 YAFFS_YAFFS2
-
+```
 
 1.2 Required disabled config options
 ------------------------------------
+```
 CONFIG_YAFFS_DISABLE_LAZY_LOAD
 DNOTIFY
-
+```
 
 1.3 Recommended enabled config options
 ------------------------------
+```
 ANDROID_PMEM
 PSTORE_CONSOLE
 PSTORE_RAM
@@ -111,10 +114,9 @@ I2C_BOARDINFO
 LOG_BUF_SHIFT=17
 SERIAL_CORE
 SERIAL_CORE_CONSOLE
-
-
+```
 2. Contact
-==========
+-------------
 website: http://android.git.kernel.org
 
 mailing-lists: android-kernel@googlegroups.com
